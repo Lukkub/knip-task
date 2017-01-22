@@ -1,11 +1,10 @@
 import React from 'react';
-import { IndexLink, Link } from 'react-router';
-import './Header.scss';
+import { AppBar } from 'material-ui';
 
 export const Header = () => (
-    <div>
-        <h1>Customers Manager</h1>
-    </div>
+    <AppBar
+      iconElementLeft={<div />}
+      title="Customers Manager" />
 );
 
 export default Header;

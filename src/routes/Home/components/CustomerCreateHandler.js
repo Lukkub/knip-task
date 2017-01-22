@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react';
+import { RaisedButton, TextField } from 'material-ui';
 
 class CustomerCreateHandler extends React.Component {
 
     static propTypes = {
-        handleCreateCustomer: PropTypes.func
+        handleCreateCustomer: PropTypes.func,
+        handleCreateRandomCustomer: PropTypes.func
     };
 
     constructor (props) {
@@ -11,13 +13,15 @@ class CustomerCreateHandler extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.renderTextFields = this.renderTextFields.bind(this);
 
         this.state = {
-            email: 'exam@exam.pl',
-            description: 'Great description',
-            balance: '0',
-            name: 'Adam',
-            surname: 'Bed'
+            showCreator: false,
+            email: '',
+            description: '',
+            balance: '',
+            name: '',
+            surname: ''
         };
     }
 
@@ -43,37 +47,77 @@ class CustomerCreateHandler extends React.Component {
         this.props.handleCreateCustomer(newCustomerData);
     }
 
-    render () {
+    renderTextFields () {
         const { email, description, balance, name, surname } = this.state;
 
+        const textDataArray = [{
+            id: 'email',
+            value: email,
+            hintText: 'example@example.com'
+        }, {
+            id: 'description',
+            value: description,
+            hintText: 'short customer description'
+        }, {
+            id: 'balance',
+            value: balance,
+            hintText: 'customer balance (integer)'
+        }, {
+            id: 'name',
+            value: name,
+            hintText: 'user name'
+        }, {
+            id: 'surname',
+            value: surname,
+            hintText: 'user surname'
+        }];
+
+        return textDataArray.map((data, key) => (
+            <div key={key}>
+                <TextField
+                  hintText={data.hintText}
+                  floatingLabelText={'Customer ' + data.id}
+                  type="text"
+                  value={data.value}
+                  onChange={(event) => this.handleChange(data.id, event.target.value)} />
+            </div>
+            )
+        );
+    }
+
+    render () {
+        const { showCreator } = this.state;
         return (
             <div>
-                <div> ------------- </div>
-                <label>
-									Email:
-									<input type="text" value={email} onChange={(event) => this.handleChange('email', event.target.value)} />
-                </label>
-                <label>
-									Description:
-				          <input type="text" value={description} onChange={(event) => this.handleChange('description', event.target.value)} />
-                </label>
-                <label>
-				          Balance:
-				          <input type="text" value={balance} onChange={(event) => this.handleChange('balance', event.target.value)} />
-                </label>
-                <label>
-				          Name:
-				          <input type="text" value={name} onChange={(event) => this.handleChange('name', event.target.value)} />
-                </label>
-                <label>
-				          Surname:
-				          <input type="text" value={surname} onChange={(event) => this.handleChange('surname', event.target.value)} />
-                </label>
-                <button onClick={this.handleSubmit}>Create Customer</button>
-                <div> ------------- </div>
+                <RaisedButton
+                  style={styles.button}
+                  onClick={this.props.handleCreateRandomCustomer}
+                  label="Create Random Customer" />
+
+                {'OR'}
+
+                <RaisedButton
+                  style={styles.button}
+                  onClick={() => this.setState({ showCreator: !showCreator })}
+                  label="Create Custom Customer" />
+
+                { showCreator &&
+                <div>
+                    { this.renderTextFields() }
+                    <RaisedButton
+                      style={styles.button}
+                      onClick={this.handleSubmit}
+                      label="Create Customer" />
+                </div> }
             </div>
         );
     }
 }
+
+const styles = {
+    button: {
+        margin: '10px'
+    }
+};
 
 export default CustomerCreateHandler;

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import ReactTable from 'react-table';
 import './CustomersTable.css';
+import { RaisedButton } from 'material-ui';
 
 export const CustomersTable = (props) => {
     const data = [];
@@ -32,18 +33,25 @@ export const CustomersTable = (props) => {
         header: 'Last Name',
         accessor: 'lastName'
     }, {
-        header: 'Delete',
+        header: '',
         accessor: 'id',
-        render: tabProp => <button onClick={() => props.handleDeleteCustomer(tabProp.value)}>Delete Customer</button>
+        render: tabProp =>
+            <RaisedButton
+              onClick={() => props.handleDeleteCustomer(tabProp.value)}
+              label="Delete Customer" />
     }, {
-        header: 'Update',
+        header: '',
         accessor: 'customer',
-        render: tabProp => <button onClick={() => props.setCustomerToUpdate(tabProp.value)}>Update Customer</button>
+        render: tabProp =>
+            <RaisedButton
+              value={{ width: '100%' }}
+              onClick={() => props.setCustomerToUpdate(tabProp.value)}
+              label="Update Customer" />
     }];
 
     return (
         <div>
-            <ReactTable data={data} columns={columns} />
+            <ReactTable defaultPageSize={5} data={data} columns={columns} />
         </div>
     );
 };

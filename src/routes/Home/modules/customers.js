@@ -68,19 +68,19 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-    [GET_CUSTOMERS_REQUEST]    : (state, action) => ({ ...state, isFetching: true, doUpdate: false }),
+    [GET_CUSTOMERS_REQUEST]    : (state, action) => ({ ...state, isFetching: true, errorMessage: null, doUpdate: false }),
     [GET_CUSTOMERS_SUCCESS]    : (state, action) => ({ ...state, isFetching: false, customersData: lodash.get(action, 'response.data', []) }),
     [GET_CUSTOMERS_FAILURE]    : (state, action) => ({ ...state, isFetching: false, errorMessage: action.error }),
 
-    [CREATE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true }),
+    [CREATE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true, errorMessage: null }),
     [CREATE_CUSTOMER_SUCCESS]    : (state, action) => ({ ...state, isFetching: false, createData: action.response, doUpdate: true }),
     [CREATE_CUSTOMER_FAILURE]    : (state, action) => ({ ...state, isFetching: false, errorMessage: action.error }),
 
-    [UPDATE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true }),
+    [UPDATE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true, errorMessage: null }),
     [UPDATE_CUSTOMER_SUCCESS]    : (state, action) => ({ ...state, isFetching: false, updateData: action.response, doUpdate: true }),
     [UPDATE_CUSTOMER_FAILURE]    : (state, action) => ({ ...state, isFetching: false, errorMessage: action.error }),
 
-    [DELETE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true }),
+    [DELETE_CUSTOMER_REQUEST]    : (state, action) => ({ ...state, isFetching: true, errorMessage: null }),
     [DELETE_CUSTOMER_SUCCESS]    : (state, action) => ({ ...state, isFetching: false, deleteData: action.response, doUpdate: true }),
     [DELETE_CUSTOMER_FAILURE]    : (state, action) => ({ ...state, isFetching: false, errorMessage: action.error })
 };

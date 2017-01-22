@@ -72,7 +72,6 @@ class CustomerUpdateHandler extends React.Component {
 
         return (
             <div>
-                <div> -------UPDATER------ </div>
                 <label>
 			          	Email:
 			          	<input type="text" value={email} onChange={(event) => this.handleChange('email', event.target.value)} />
@@ -94,7 +93,7 @@ class CustomerUpdateHandler extends React.Component {
 			          	<input type="text" value={surname} onChange={(event) => this.handleChange('surname', event.target.value)} />
                 </label>
                 <button onClick={this.handleSubmit}>Update Customer</button>
-                <div> -------UPDATER------ </div>
+                <div> ------------- </div>
             </div>
         );
     }

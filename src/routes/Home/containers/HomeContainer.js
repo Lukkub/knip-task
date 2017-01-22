@@ -5,6 +5,7 @@ import CustomersTable from '../components/CustomersTable';
 import ApiStatusHandler from '../components/ApiStatusHandler';
 import CustomerCreateHandler from '../components/CustomerCreateHandler';
 import CustomerUpdateHandler from '../components/CustomerUpdateHandler';
+import { RaisedButton } from 'material-ui';
 
 class HomeContainer extends React.Component {
 
@@ -137,10 +138,9 @@ class HomeContainer extends React.Component {
     render () {
         return (
             <div>
-                <button onClick={this.handleCreateRandomCustomer}>Create Random Customer</button>
-                <button onClick={this.handleDeleteAllCustomers}>Delete All Customers</button>
-
-                <CustomerCreateHandler handleCreateCustomer={this.handleCreateCustomer} />
+                <CustomerCreateHandler
+                  handleCreateRandomCustomer={this.handleCreateRandomCustomer}
+                  handleCreateCustomer={this.handleCreateCustomer} />
 
                 <CustomerUpdateHandler
                   customerUpdateData={this.state.customerUpdateData}
@@ -155,6 +155,11 @@ class HomeContainer extends React.Component {
                   customersData={this.props.customersData}
                   handleDeleteCustomer={this.handleDeleteCustomer}
                   setCustomerToUpdate={this.setCustomerToUpdate} />
+
+                <RaisedButton
+                  onClick={this.handleDeleteAllCustomers}
+                  label="Delete All Customers"
+                  secondary />
             </div>
         );
     }
