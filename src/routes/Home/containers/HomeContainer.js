@@ -1,38 +1,114 @@
+import React from 'react'
 import { connect } from 'react-redux'
-import { increment, doubleAsync } from '../modules/customers'
+import { getAllCustomers, createCustomer, updateCustomer, deleteCustomer } from '../modules/customers'
+import CustomersTable from '../components/CustomersTable'
+import ApiStatusHandler from '../components/ApiStatusHandler'
+import CustomerCreateHandler from '../components/CustomerCreateHandler'
 
-/*  This is a container component. Notice it does not contain any JSX,
-    nor does it import React. This component is **only** responsible for
-    wiring in the actions and state necessary to render a presentational
-    component - in this case, the counter:   */
 
-import HomeView from '../components/HomeView'
+class HomeContainer extends React.Component {
 
-/*  Object of action creators (can also be function that returns object).
-    Keys will be passed as props to presentational components. Here we are
-    implementing our wrapper around increment; the component doesn't care   */
+	constructor (props) {
+		super(props);
+
+		this.handleCreateRandomCustomer = this.handleCreateRandomCustomer.bind(this);
+		this.handleDeleteAllCustomers = this.handleDeleteAllCustomers.bind(this);
+		this.checkApiStatus = this.checkApiStatus.bind(this);
+		this.handleCreateCustomer = this.handleCreateCustomer.bind(this);
+		this.handleDeleteCustomer = this.handleDeleteCustomer.bind(this);
+	}
+
+	componentDidMount () {
+		this.props.getAllCustomers();
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (nextProps.doUpdate) {
+			this.props.getAllCustomers();
+		}
+	}
+
+	checkApiStatus () {
+		return this.props.isFetching;
+	}
+
+	handleCreateRandomCustomer () {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		const customerId = parseInt(Math.random()*10000);
+		const customerData = {
+			email: customerId + '@example.com',
+			description: 'Customer for ' + customerId + '@example.com',
+			account_balance: customerId,
+			metadata: {
+				firstName: customerId + 'name',
+				lastName: customerId + 'surname'
+			}
+		};
+		console.log('New customerId', customerId);
+
+		this.props.createCustomer(customerData);
+	}
+
+	handleDeleteAllCustomers () {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		this.props.customersData.map((customer) => {
+			this.props.deleteCustomer(customer.id);
+		});
+	}
+
+	handleCreateCustomer(customerData) {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		this.props.createCustomer(customerData);
+	}
+
+
+	handleDeleteCustomer(customerId) {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		this.props.deleteCustomer(customerId);
+	}
+
+	render() {
+	  return (
+	  	<div>
+	  		<button onClick={this.handleCreateRandomCustomer}>Create Random Customer</button>
+	  		<button onClick={this.handleDeleteAllCustomers}>Delete All Customers</button>
+	  		<CustomerCreateHandler {...this.props} handleCreateCustomer={this.handleCreateCustomer}/>
+	  		<ApiStatusHandler {...this.props}/>
+	  		<CustomersTable {...this.props} handleDeleteCustomer={this.handleDeleteCustomer}/>
+	  	</div>
+	  );
+	}
+}
 
 const mapDispatchToProps = {
-  increment : () => increment(1),
-  doubleAsync
+  getAllCustomers,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer
 }
 
 const mapStateToProps = (state) => ({
-  apiStatus : state.customers.apiStatus
+  isFetching : state.customers.isFetching,
+  doUpdate: state.customers.doUpdate,
+  errorMessage : state.customers.errorMessage,
+  customersData : state.customers.customersData,
+  createData: state.customers.createData
 })
 
-/*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:
-
-    import { createSelector } from 'reselect'
-    const counter = (state) => state.counter
-    const tripleCount = createSelector(counter, (count) => count * 3)
-    const mapStateToProps = (state) => ({
-      counter: tripleCount(state)
-    })
-
-    Selectors can compute derived data, allowing Redux to store the minimal possible state.
-    Selectors are efficient. A selector is not recomputed unless one of its arguments change.
-    Selectors are composable. They can be used as input to other selectors.
-    https://github.com/reactjs/reselect    */
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer)

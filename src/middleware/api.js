@@ -1,28 +1,13 @@
-let msbToken = '';
-
-const API_ROOT = 'https://api.stripe.com/';
 const debug = false;
 
-
 // Action key that carries API call info interpreted by this Redux middleware.
-export const CALL_API = 'Call API';
-
-// Fetches an API response and normalizes the result JSON according to schema.
-// This makes every API response have the same shape, regardless of how nested it was.
-
-function bodyFormat (data) {
-    const fd = new FormData();
-
-    for (const k in data) {
-        fd.append(k, data[k]);
-    }
-    return fd;
-}
+export const CALL_API = 'CALL_API';
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
 export default store => next => action => {
     const callAPI = action[CALL_API];
+
     if (typeof callAPI === 'undefined') return next(action);
 
     let { endpoint, method } = callAPI;
@@ -53,26 +38,20 @@ export default store => next => action => {
     const [requestType, successType, failureType] = types;
     next(actionWith({ type: requestType }));
 
-    async function callApi (endpoint, method = 'GET', data) {
-        const value = await AsyncStorage.getItem('msbToken');
+    function callApi (endpoint, method = 'GET', body) {
+
+    	const API_ROOT = 'https://api.stripe.com/v1/';
         const fullUrl = API_ROOT + endpoint;
 
-        msbToken = (value !== null) ? value : '';
+        const headers = {
+        	'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        	Authorization: 'Bearer sk_test_EfaFF4DvuxMeL5XwKfnWAkZg'
+        };
 
-        if (debug) console.log('[API] Value = ', value);
 
-        const headers = { apikey };
-
-        // Create token hack
-        // if (endpoint !== 'token/create')
-        if (msbToken) {
-            headers.msbToken = msbToken;
-        }
-
-        let body = null;
-        if (typeof data !== 'undefined' && typeof data.body !== 'undefined' && method === 'POST') {
-            body = bodyFormat(data.body);
-        }
+        if (body) {
+	        body = $.param(body);
+	    }
 
         if (debug) console.log('[API] call', fullUrl, headers, body);
 
@@ -80,12 +59,12 @@ export default store => next => action => {
             .then(response =>
                 response.json().then(json => {
                     if (!response.ok) {
-                        if (debug) console.log('[API] rejected response ', fullUrl, response);
+                        if (debug) console.log('[API] rejected response ', fullUrl, json);
 
-                        return Promise.reject(json);
+                        return Promise.reject(json.error);
                     }
 
-                    if (debug) console.log('[API] response from ' + fullUrl, json.data);
+                    if (debug) console.log('[API] response from ' + fullUrl, json);
 
                     return Object.assign({}, json);
                 })
