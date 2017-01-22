@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react';
+import { RaisedButton, TextField } from 'material-ui';
+import lodash from 'lodash';
 
 class CustomerUpdateHandler extends React.Component {
 
@@ -13,11 +15,12 @@ class CustomerUpdateHandler extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.renderTextFields = this.renderTextFields.bind(this);
 
         this.state = {
             email: '',
             description: '',
-            balance: '0',
+            balance: '',
             name: '',
             surname: ''
         };
@@ -48,6 +51,17 @@ class CustomerUpdateHandler extends React.Component {
     handleSubmit () {
         const { email, description, balance, name, surname } = this.state;
 
+        // simple validation
+        if (email.indexOf('@') === -1) {
+            alert('Email field is not an email address.');
+            return;
+        }
+
+        if (!lodash.isInteger(parseInt(balance))) {
+            alert('Balance field is not an integer number.');
+            return;
+        }
+
         const customerId = this.props.customerUpdateData.id;
 
         const newCustomerData = {
@@ -63,40 +77,76 @@ class CustomerUpdateHandler extends React.Component {
         this.props.handleUpdateCustomer(customerId, newCustomerData);
     }
 
-    render () {
+    renderTextFields () {
         const { email, description, balance, name, surname } = this.state;
 
+        const textDataArray = [{
+            id: 'email',
+            value: email,
+            hintText: 'example@example.com'
+        }, {
+            id: 'description',
+            value: description,
+            hintText: 'short customer description'
+        }, {
+            id: 'balance',
+            value: balance,
+            hintText: 'customer balance (integer)'
+        }, {
+            id: 'name',
+            value: name,
+            hintText: 'user name'
+        }, {
+            id: 'surname',
+            value: surname,
+            hintText: 'user surname'
+        }];
+
+        return textDataArray.map((data, key) => (
+            <TextField
+              key={key}
+              style={styles.textField}
+              hintText={data.hintText}
+              floatingLabelText={'Customer ' + data.id}
+              type="text"
+              value={data.value || ''}
+              onChange={(event) => this.handleChange(data.id, event.target.value)} />
+            )
+        );
+    }
+
+    render () {
         if (!this.props.isVisible) {
             return null;
         }
 
         return (
-            <div>
-                <label>
-			          	Email:
-			          	<input type="text" value={email} onChange={(event) => this.handleChange('email', event.target.value)} />
-                </label>
-                <label>
-			          	Description:
-			          	<input type="text" value={description} onChange={(event) => this.handleChange('description', event.target.value)} />
-                </label>
-                <label>
-			          	Balance:
-			          	<input type="text" value={balance} onChange={(event) => this.handleChange('balance', event.target.value)} />
-                </label>
-                <label>
-			          	Name:
-			          	<input type="text" value={name} onChange={(event) => this.handleChange('name', event.target.value)} />
-                </label>
-                <label>
-			          	Surname:
-			          	<input type="text" value={surname} onChange={(event) => this.handleChange('surname', event.target.value)} />
-                </label>
-                <button onClick={this.handleSubmit}>Update Customer</button>
-                <div> ------------- </div>
+            <div style={styles.container}>
+                {this.renderTextFields()}
+                <RaisedButton
+                  style={styles.button}
+                  onClick={this.handleSubmit}
+                  label="Update Customer" />
             </div>
         );
     }
 }
+
+const styles = {
+    container: {
+        borderColor: '#ff4081',
+        borderRadius: '15px',
+        borderWidth: '5px',
+        borderStyle: 'solid',
+        padding: '10px',
+        margin: '10px'
+    },
+    button: {
+        margin: '10px'
+    },
+    textField: {
+        marginRight: '10px'
+    }
+};
 
 export default CustomerUpdateHandler;

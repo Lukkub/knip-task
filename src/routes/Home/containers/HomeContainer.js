@@ -138,6 +138,10 @@ class HomeContainer extends React.Component {
     render () {
         return (
             <div>
+                <ApiStatusHandler
+                  isFetching={this.props.isFetching}
+                  errorMessage={this.props.errorMessage} />
+
                 <CustomerCreateHandler
                   handleCreateRandomCustomer={this.handleCreateRandomCustomer}
                   handleCreateCustomer={this.handleCreateCustomer} />
@@ -147,16 +151,13 @@ class HomeContainer extends React.Component {
                   isVisible={this.state.isCustomerUpdate}
                   handleUpdateCustomer={this.handleUpdateCustomer} />
 
-                <ApiStatusHandler
-                  isFetching={this.props.isFetching}
-                  errorMessage={this.props.errorMessage} />
-
                 <CustomersTable
                   customersData={this.props.customersData}
                   handleDeleteCustomer={this.handleDeleteCustomer}
                   setCustomerToUpdate={this.setCustomerToUpdate} />
 
                 <RaisedButton
+                  style={{ margin: '15px' }}
                   onClick={this.handleDeleteAllCustomers}
                   label="Delete All Customers"
                   secondary />

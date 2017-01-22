@@ -4,9 +4,11 @@ import './CustomersTable.css';
 import { RaisedButton } from 'material-ui';
 
 export const CustomersTable = (props) => {
+    const reverseData = [].concat(props.customersData);
     const data = [];
-    props.customersData.map((customer) => {
+    reverseData.reverse().map((customer, key) => {
         data.push({
+            key: key + 1,
             id: customer.id,
             email: customer.email,
             description: customer.description,
@@ -18,6 +20,9 @@ export const CustomersTable = (props) => {
     });
 
     const columns = [{
+        header: 'Nb.',
+        accessor: 'key'
+    }, {
         header: 'Email',
         accessor: 'email'
     }, {
@@ -38,20 +43,19 @@ export const CustomersTable = (props) => {
         render: tabProp =>
             <RaisedButton
               onClick={() => props.handleDeleteCustomer(tabProp.value)}
-              label="Delete Customer" />
+              label="Delete" />
     }, {
         header: '',
         accessor: 'customer',
         render: tabProp =>
             <RaisedButton
-              value={{ width: '100%' }}
               onClick={() => props.setCustomerToUpdate(tabProp.value)}
-              label="Update Customer" />
+              label="Update" />
     }];
 
     return (
-        <div>
-            <ReactTable defaultPageSize={5} data={data} columns={columns} />
+        <div style={{ margin: '5px' }}>
+            <ReactTable defaultPageSize={5} sorting={[]} data={data} columns={columns} />
         </div>
     );
 };

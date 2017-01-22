@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { RaisedButton, TextField } from 'material-ui';
+import lodash from 'lodash';
 
 class CustomerCreateHandler extends React.Component {
 
@@ -33,6 +34,17 @@ class CustomerCreateHandler extends React.Component {
 
     handleSubmit () {
         const { email, description, balance, name, surname } = this.state;
+
+				// simple validation
+        if (email.indexOf('@') === -1) {
+            alert('Email field is not an email address.');
+            return;
+        }
+
+        if (!lodash.isInteger(parseInt(balance))) {
+            alert('Balance field is not an integer number.');
+            return;
+        }
 
         const newCustomerData = {
             email,
@@ -73,14 +85,14 @@ class CustomerCreateHandler extends React.Component {
         }];
 
         return textDataArray.map((data, key) => (
-            <div key={key}>
-                <TextField
-                  hintText={data.hintText}
-                  floatingLabelText={'Customer ' + data.id}
-                  type="text"
-                  value={data.value}
-                  onChange={(event) => this.handleChange(data.id, event.target.value)} />
-            </div>
+            <TextField
+              key={key}
+              style={styles.textField}
+              hintText={data.hintText}
+              floatingLabelText={'Customer ' + data.id}
+              type="text"
+              value={data.value}
+              onChange={(event) => this.handleChange(data.id, event.target.value)} />
             )
         );
     }
@@ -102,7 +114,7 @@ class CustomerCreateHandler extends React.Component {
                   label="Create Custom Customer" />
 
                 { showCreator &&
-                <div>
+                <div style={styles.container}>
                     { this.renderTextFields() }
                     <RaisedButton
                       style={styles.button}
@@ -115,8 +127,19 @@ class CustomerCreateHandler extends React.Component {
 }
 
 const styles = {
+    container: {
+        borderColor: '#00bcd4',
+        borderRadius: '15px',
+        borderWidth: '5px',
+        borderStyle: 'solid',
+        padding: '10px',
+        margin: '10px'
+    },
     button: {
         margin: '10px'
+    },
+    textField: {
+        marginRight: '10px'
     }
 };
 
