@@ -1,10 +1,5 @@
 import React from 'react'
 
-const handleSubmit = (callback) => {
-
-	callback();
-}
-
 class CustomerCreateHandler extends React.Component {
 
 	constructor (props) {
