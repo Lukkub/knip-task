@@ -15,7 +15,8 @@ export const CustomersTable = (props) => {
 			description: customer.description,
 			account_balance: customer.account_balance,
 			firstName: customer.metadata.firstName,
-			lastName: customer.metadata.lastName
+			lastName: customer.metadata.lastName,
+			customer
 		});
 	})
 
@@ -38,6 +39,10 @@ export const CustomersTable = (props) => {
 	  header: 'Delete',
 	  accessor: 'id',
 	  render: tabProp => <button onClick={() => props.handleDeleteCustomer(tabProp.value)}>Delete Customer</button>
+	}, {
+	  header: 'Update',
+	  accessor: 'customer',
+	  render: tabProp => <button onClick={() => props.setCustomerToUpdate(tabProp.value)}>Update Customer</button>
 	}];
 
 	return (

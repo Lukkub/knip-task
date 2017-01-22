@@ -5,7 +5,7 @@ const handleSubmit = (callback) => {
 	callback();
 }
 
-class CustomerCreateHandler extends React.Component {
+class CustomerUpdateHandler extends React.Component {
 
 	constructor (props) {
 		super(props);
@@ -14,12 +14,29 @@ class CustomerCreateHandler extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
-			email: 'exam@exam.pl',
-			description: 'Great description',
+			email: '',
+			description: '',
 			balance: '0',
-			name: 'Adam',
-			surname: 'Bed',
+			name: '',
+			surname: '',
 		}
+	}
+
+	componentWillReceiveProps (nextProps) {
+
+		const customerUpdateData = nextProps.customerUpdateData;
+
+		if(!customerUpdateData){
+			return;
+		}
+
+		this.setState({
+			email: customerUpdateData.email,
+			description: customerUpdateData.description,
+			balance: customerUpdateData.account_balance,
+			name: customerUpdateData.metadata.firstName,
+			surname: customerUpdateData.metadata.lastName,
+		});
 	}
 
 	handleChange (property, value) {
@@ -37,6 +54,8 @@ class CustomerCreateHandler extends React.Component {
 			surname
 		} = this.state;
 
+		const customerId = this.props.customerUpdateData.id;
+
 		const newCustomerData = {
 			email,
 			description,
@@ -47,7 +66,7 @@ class CustomerCreateHandler extends React.Component {
 			}
 		}
 
-		this.props.handleCreateCustomer(newCustomerData)
+		this.props.handleUpdateCustomer(customerId, newCustomerData)
 	}
 
 	render() {
@@ -59,9 +78,13 @@ class CustomerCreateHandler extends React.Component {
 			surname
 		} = this.state;
 
+		if (!this.props.isVisible) {
+			return null;
+		}
+
 		return (
 		  	<div>
-			  	<div> ------------- </div>
+			  	<div> -------UPDATER------ </div>
 			  		<label>
 			          Email:
 			          <input type="text" value={email} onChange={(event) => this.handleChange('email', event.target.value)} />
@@ -82,11 +105,11 @@ class CustomerCreateHandler extends React.Component {
 			          Surname:
 			          <input type="text" value={surname} onChange={(event) => this.handleChange('surname', event.target.value)} />
 			        </label>
-			        <button onClick={this.handleSubmit}>Create Customer</button>
-			    <div> ------------- </div>
+			        <button onClick={this.handleSubmit}>Update Customer</button>
+			    <div> -------UPDATER------ </div>
 			</div>
 		);
 	}
 }
 
-export default CustomerCreateHandler
+export default CustomerUpdateHandler

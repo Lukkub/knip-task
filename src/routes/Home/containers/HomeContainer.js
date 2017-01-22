@@ -4,6 +4,7 @@ import { getAllCustomers, createCustomer, updateCustomer, deleteCustomer } from 
 import CustomersTable from '../components/CustomersTable'
 import ApiStatusHandler from '../components/ApiStatusHandler'
 import CustomerCreateHandler from '../components/CustomerCreateHandler'
+import CustomerUpdateHandler from '../components/CustomerUpdateHandler'
 
 
 class HomeContainer extends React.Component {
@@ -16,6 +17,13 @@ class HomeContainer extends React.Component {
 		this.checkApiStatus = this.checkApiStatus.bind(this);
 		this.handleCreateCustomer = this.handleCreateCustomer.bind(this);
 		this.handleDeleteCustomer = this.handleDeleteCustomer.bind(this);
+		this.setCustomerToUpdate = this.setCustomerToUpdate.bind(this);
+		this.handleUpdateCustomer = this.handleUpdateCustomer.bind(this);
+
+		this.state = {
+			isCustomerUpdate: false,
+			customerUpdateData: null
+		}
 	}
 
 	componentDidMount () {
@@ -48,7 +56,6 @@ class HomeContainer extends React.Component {
 				lastName: customerId + 'surname'
 			}
 		};
-		console.log('New customerId', customerId);
 
 		this.props.createCustomer(customerData);
 	}
@@ -58,6 +65,11 @@ class HomeContainer extends React.Component {
 		if (this.checkApiStatus()) {
 			return;
 		}
+
+		this.setState({
+			isCustomerUpdate: false,
+			customerUpdateData: null
+		})
 
 		this.props.customersData.map((customer) => {
 			this.props.deleteCustomer(customer.id);
@@ -70,6 +82,11 @@ class HomeContainer extends React.Component {
 			return;
 		}
 
+		this.setState({
+			isCustomerUpdate: false,
+			customerUpdateData: null
+		})
+
 		this.props.createCustomer(customerData);
 	}
 
@@ -80,7 +97,38 @@ class HomeContainer extends React.Component {
 			return;
 		}
 
+		this.setState({
+			isCustomerUpdate: false,
+			customerUpdateData: null
+		})
+
 		this.props.deleteCustomer(customerId);
+	}
+
+	setCustomerToUpdate(customerData) {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		this.setState({
+			isCustomerUpdate: true,
+			customerUpdateData: customerData
+		})
+	}
+
+	handleUpdateCustomer(customerId, customerData) {
+
+		if (this.checkApiStatus()) {
+			return;
+		}
+
+		this.props.updateCustomer(customerId, customerData);
+
+		this.setState({
+			isCustomerUpdate: false,
+			customerUpdateData: null
+		})
 	}
 
 	render() {
@@ -88,9 +136,22 @@ class HomeContainer extends React.Component {
 	  	<div>
 	  		<button onClick={this.handleCreateRandomCustomer}>Create Random Customer</button>
 	  		<button onClick={this.handleDeleteAllCustomers}>Delete All Customers</button>
-	  		<CustomerCreateHandler {...this.props} handleCreateCustomer={this.handleCreateCustomer}/>
-	  		<ApiStatusHandler {...this.props}/>
-	  		<CustomersTable {...this.props} handleDeleteCustomer={this.handleDeleteCustomer}/>
+
+	  		<CustomerCreateHandler handleCreateCustomer={this.handleCreateCustomer}/>
+
+	  		<CustomerUpdateHandler
+	  			customerUpdateData={this.state.customerUpdateData}
+	  			isVisible={this.state.isCustomerUpdate}
+	  			handleUpdateCustomer={this.handleUpdateCustomer}/>
+
+	  		<ApiStatusHandler
+	  			isFetching={this.props.isFetching}
+	  			errorMessage={this.props.errorMessage} />
+
+	  		<CustomersTable
+	  			customersData={this.props.customersData}
+	  			handleDeleteCustomer={this.handleDeleteCustomer}
+	  			setCustomerToUpdate={this.setCustomerToUpdate} />
 	  	</div>
 	  );
 	}

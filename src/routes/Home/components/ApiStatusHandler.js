@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ApiStatusHandler = (props) => {
 
-	const apiStatusInfo = (props.isFetching) ? 'FETCHING DATA' : 'RESTING';
+	const apiStatusInfo = (props.isFetching) ? 'BUSY' : 'RESTING';
 
 	const error = props.errorMessage;
 	return (
