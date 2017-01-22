@@ -5,3 +5,7 @@
 2. Inside project folder run `npm install`
 3. Inside project folder run `npm start`
 4. In browser go to `http://localhost:3000/`
+
+
+## Additional
+Designed based on `https://github.com/davezuko/react-redux-starter-kit`

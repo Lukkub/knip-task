@@ -1,11 +1,11 @@
-import React from 'react'
-import { IndexLink, Link } from 'react-router'
-import './Header.scss'
+import React from 'react';
+import { IndexLink, Link } from 'react-router';
+import './Header.scss';
 
 export const Header = () => (
-  <div>
-    <h1>Customers Manager</h1>
-  </div>
-)
+    <div>
+        <h1>Customers Manager</h1>
+    </div>
+);
 
-export default Header
+export default Header;

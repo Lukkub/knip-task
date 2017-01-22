@@ -39,19 +39,17 @@ export default store => next => action => {
     next(actionWith({ type: requestType }));
 
     function callApi (endpoint, method = 'GET', body) {
-
-    	const API_ROOT = 'https://api.stripe.com/v1/';
+        const API_ROOT = 'https://api.stripe.com/v1/';
         const fullUrl = API_ROOT + endpoint;
 
         const headers = {
-        	'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-        	Authorization: 'Bearer sk_test_EfaFF4DvuxMeL5XwKfnWAkZg'
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+            Authorization: 'Bearer sk_test_EfaFF4DvuxMeL5XwKfnWAkZg'
         };
 
-
         if (body) {
-	        body = $.param(body);
-	    }
+            body = $.param(body);
+        }
 
         if (debug) console.log('[API] call', fullUrl, headers, body);
 
